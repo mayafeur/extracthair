@@ -8,21 +8,31 @@ import csv
 MOTS_CLES = ["HAIR", "MECHE", "TIF", "DECOIF"]
 OCCURENCES_MIN = 5
 
+def purifier_nom(nom: str) -> str:
+    nom = nom.strip()
+    nom = nom.replace("'", " ")
+    nom = nom.replace("-", " ")
+    nom = nom.replace("[ND]", "")
+    nom = nom.removeprefix("L ")
+    nom = nom.removeprefix("LE ")
+    nom = nom.removeprefix("LA ")
+    nom = nom.removeprefix("LES ")
+    nom = nom.removeprefix("SARL ")
+    nom = nom.strip()
+    return nom
+
 occurences_par_nom = {}
 with open("annuaire.csv", newline='') as f:
     reader = csv.DictReader(f)
     for row in reader:
-        for colonne in ["denominationUsuelleEtablissement", "denominationUniteLegale"]:
-            nom = row[colonne]
-            nom = nom.replace("'", " ")
-            nom = nom.replace("SARL", "")
-            nom = nom.strip()
-            if not nom or nom == "[ND]":
-                continue
+        nom_usuel = purifier_nom(row["denominationUsuelleEtablissement"])
+        nom_legal = purifier_nom(row["denominationUniteLegale"])
+        for nom in set([nom_usuel, nom_legal]):
             if nom in occurences_par_nom:
                 occurences_par_nom[nom] += 1
             else:
                 occurences_par_nom[nom] = 1
+occurences_par_nom.pop("")
 
 occurences_sorted = sorted(occurences_par_nom.items(), key=lambda x: x[1], reverse=True)
 occurences_sorted = [(x, y) for x, y in occurences_sorted if y >= OCCURENCES_MIN]

@@ -9,9 +9,10 @@ Le script crée deux fichiers :
 
 Les noms sont extraits depuis le CSV :
  - à partir des colonnes *denominationUsuelleEtablissement* et *denominationUniteLegale* ;
- - les apostrophes sont retirées à cause de l'inconsistance de leur usage.
+ - un établissement qui a le même nom usuel et légal n'est compté qu'une seule fois ;
+ - les apostrophes sont retirées à cause de l'inconsistance de leur usage ;
+ - les déterminants sont retirés pour simplifier le comptage.
 
 Limites :
- - la présence ou non des déterminants peut fausser un peu le comptage ;
  - il est probable que certains salons aient un nom de devanture différent de ce qui est déclaré légalement ;
  - le script ne gère pour le moment pas d'autres territoires francophones.
